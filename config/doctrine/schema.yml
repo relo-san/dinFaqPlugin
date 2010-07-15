@@ -1,0 +1,65 @@
+
+# This file is part of the dinFaqPlugin package.
+# (c) DineCat, 2010 http://dinecat.com/
+#
+# For the full copyright and license information, please view the LICENSE file,
+# that was distributed with this package, or see http://www.dinecat.com/din/license.html
+
+# Plugin schema file for Doctrine
+#
+# @package     dinFaqPlugin
+# @subpackage  config.doctrine
+# @author      Nicolay N. Zyk <relo.san@gmail.com>
+
+#DinFaqCategory
+DinFaqCategory:
+
+    actAs:
+        I18n:
+            fields:         ['is_published', 'title', 'uri', 'description']
+            unique:         ['uri']
+
+    columns:
+        id:                 { type: 'integer(4)', primary: true, autoincrement: true }
+        is_published:       { type: 'boolean', notnull: true, default: true }
+        title:              { type: 'string(150)', fixed: true }
+        uri:                { type: 'string(50)', fixed: true }
+        description:        { type: 'clob(65532)' }
+
+    indexes:
+        published:          { fields: ['is_published'] }
+        uri:                { fields: ['uri'], type: 'unique' }
+
+
+#DinFaq
+DinFaq:
+
+    actAs:
+        I18n:
+            fields:         ['is_published', 'published_at', 'question', 'uri', 'answer']
+            unique:         ['uri']
+
+    columns:
+        id:                 { type: 'integer(4)', primary: true, autoincrement: true }
+        category_id:        { type: 'integer(4)' }
+        is_published:       { type: 'boolean', notnull: true, default: true }
+        published_at:       { type: 'timestamp' }
+        question:           { type: 'string(250)', fixed: true }
+        uri:                { type: 'string(50)', fixed: true }
+        answer:             { type: 'clob' }
+
+    indexes:
+        category:           { fields: ['category_id'] }
+        uri:                { fields: ['uri'], type: 'unique' }
+
+    relations:
+        DinFaqCategory:
+            local:          'category_id'
+            foreign:        'id'
+            type:           'one'
+            foreignType:    'many'
+            alias:          'Category'
+            foreignAlias:   'Pairs'
+            onDelete:       'SET NULL'
+
+#EOF
